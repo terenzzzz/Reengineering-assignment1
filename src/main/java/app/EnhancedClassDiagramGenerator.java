@@ -1,7 +1,8 @@
 package app;
 
-import structuralAnalysis.ClassDiagram;
-import structuralAnalysis.MetricsClassDiagram;
+
+import structuralAnalysis.EnhancedClassDiagram;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -13,8 +14,7 @@ public class EnhancedClassDiagramGenerator {
         Boolean ignoreInnerClasses = Boolean.parseBoolean(args[2]);
         String signaturePrefix = args[3];
         String output = args[4];
-
-        MetricsClassDiagram cd = new MetricsClassDiagram(root, ignoreLibs, ignoreInnerClasses, signaturePrefix);
+        EnhancedClassDiagram cd = new EnhancedClassDiagram(root, ignoreLibs, ignoreInnerClasses, signaturePrefix);
         cd.writeDot(new File(output));
     }
 }
