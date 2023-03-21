@@ -3,11 +3,14 @@ package structuralAnalysis;
 import util.ReflectionClassReader;
 
 import java.io.File;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class EnhancedClassDiagram extends ClassDiagram {
 
     Map<String,Integer> numMethods, numMembers;
+    Map<String,String> classType;
 
 
     /**
@@ -24,6 +27,9 @@ public class EnhancedClassDiagram extends ClassDiagram {
         numMembers = new HashMap<>();
         numMethods = new HashMap<>();
 
+        classType = new HashMap<>();
+
+
         File dir = new File(root);
         ReflectionClassReader rcr = new ReflectionClassReader();
 
@@ -33,8 +39,18 @@ public class EnhancedClassDiagram extends ClassDiagram {
             numMembers.put(cl.getName(),cl.getDeclaredFields().length);
 
             numMethods.put(cl.getName(),cl.getMethods().length);
-        }
 
+            if (cl.isInterface()){
+                classType.put(cl.getName(),"Interface");
+            } else if (cl.isEnum()) {
+                classType.put(cl.getName(),"Enum");
+            } else if (Modifier.isAbstract(cl.getModifiers())) {
+                classType.put(cl.getName(),"Abstract");
+            }else{
+                // cl.isMemberClass();
+                classType.put(cl.getName(),"Class");
+            }
+        }
     }
 
     public String toString(){
@@ -48,7 +64,7 @@ public class EnhancedClassDiagram extends ClassDiagram {
         for(String className : includedClasses){
             int members = numMembers.get(className);
             // 节点的宽度由该类的成员变量数量决定
-            double width = 1 + (members*.45) ;
+            double width = 1 + (members*.65) ;
             // 节点的高度由该类的方法数量决定
             double height = 1 + (numMethods.get(className)*.15) ;
 
@@ -69,19 +85,35 @@ public class EnhancedClassDiagram extends ClassDiagram {
             size of a node will automatically expand to fit the label (which would skew our visualisation).
              */
             // 将该代码添加到 dotGraph 中
-            dotGraph.append("\""+className + "\"[shape = box, width="+width+", height="+height+", style=filled, fillcolor=\"#"+r+g+b+"\",fixedsize=true];\n");
+            // Interface: diamond , Abstract: circle , Class: box, Enum: oval
+            String type = classType.get(className);
+            String shape = "";
+            if (type == "Interface"){
+                shape = "diamond";
+            } else if (type == "Enum") {
+                shape = "triangle";
+            } else if (type == "Abstract") {
+                shape = "circle";
+            } else {
+                shape = "box";
+            }
+
+            dotGraph.append("\""+className + "\"[shape = "+ shape+", width="+width+", height="+height+", style=filled, fillcolor=\"#"+r+g+b+"\",fixedsize=true];\n");
         }
 
-        //Add inheritance relations
+        //Add inheritance relations 继承
         for(String childClass : inheritance.keySet()){
             if(includedClasses.contains(childClass) && includedClasses.contains(inheritance.get(childClass))) {
                 String from = "\"" + childClass + "\"";
                 String to = "\"" + inheritance.get(childClass) + "\"";
-                dotGraph.append(from + " -> " + to + "[arrowhead = onormal, style=\"bold\", penwidth=10];\n");
+                Integer inheritanceDepth = calcDepth(childClass);
+                String penwidth = Integer.toString((1 + 4*inheritanceDepth));
+                dotGraph.append(from + " -> " + to + "[arrowhead = onormal, penwidth="+penwidth+", color=red];\n");
             }
         }
 
-        //Add associations
+        //Add associations 关联
+        System.out.println(associations);
         for(String cls : associations.keySet()){
             if(!includedClasses.contains(cls))
                 continue;
@@ -91,11 +123,21 @@ public class EnhancedClassDiagram extends ClassDiagram {
                     continue;
                 String from = "\""+cls +"\"";
                 String to = "\""+field+"\"";
-                dotGraph.append(from + " -> " +to + "[arrowhead = diamond,style=\"bold\", penwidth=10];\n");
+                dotGraph.append(from + " -> " +to + "[arrowhead = diamond,penwidth=10, color=blue];\n");
             }
         }
 
         dotGraph.append("}");
         return dotGraph.toString();
     }
+
+    public Integer calcDepth(String childClass){
+        Integer counter = 0;
+        while (includedClasses.contains(childClass) && includedClasses.contains(inheritance.get(childClass))) {
+            counter ++;
+            childClass = inheritance.get(childClass);
+        }
+        return counter;
+    }
+
 }
