@@ -1,6 +1,7 @@
 package app;
 
 import dependenceAnalysis.interprocedural.CallGraph;
+import dependenceAnalysis.interprocedural.ClassCallGraph;
 import dependenceAnalysis.interprocedural.RestrictedCallGraph;
 import dependenceAnalysis.util.Signature;
 
@@ -12,75 +13,74 @@ import java.util.*;
 public class CallFanOutClassGenerator {
 
     public static void main(String[] args) throws IOException{
-        CallGraph cg = null;
-        if(args.length>1){
-            cg = new RestrictedCallGraph(args[0],args[1]);
-        }else {
-            cg = new CallGraph(args[0]);
+
+        // build graph
+        CallGraph cg = new CallGraph(args[0]);
+        ClassCallGraph ccg = new ClassCallGraph(args[0]);
+
+        // get call data
+        Map<String, Integer> cfo = classFanOut(ccg);
+        Map<String, Integer> mfo = methodFanOut(cg);
+
+        BufferedWriter bw = new BufferedWriter(new FileWriter("call_fan_out_class_sorted.csv"));
+        bw.write("Class,ClassFanOut,MethodFanOut\n");
+
+        // read data to list
+        List<String[]> data = new ArrayList<>();
+        for (String key : cfo.keySet()) {
+            int classFanIn = cfo.get(key);
+            int methodFanIn = mfo.get(key);
+            data.add(new String[]{key, Integer.toString(classFanIn), Integer.toString(methodFanIn)});
         }
-        writeFanIn(cg);
-//        System.out.println(cg);
+
+        // using compare to sort
+        Collections.sort(data, new Comparator<String[]>() {
+            @Override
+            public int compare(String[] o1, String[] o2) {
+                return Integer.compare(Integer.parseInt(o2[1]), Integer.parseInt(o1[1]));
+            }
+        });
+
+        // Write sorted data to .csv file
+        for (String[] row : data) {
+            bw.write(row[0] + "," + row[1] + "," + row[2] + "\n");
+        }
+        bw.flush();
+        bw.close();
     }
 
-    private static void writeFanIn(CallGraph cg) throws IOException {
-        Map<String, Integer> myDict = new HashMap<String, Integer>();
-
-        String toReturn = "";
+    private static Map<String, Integer> methodFanOut(CallGraph cg) throws IOException {
+        Map<String, Integer> mfo = new HashMap<String, Integer>();
 
         for(Signature sig : cg.getCallGraph().getNodes()) {
             String[] parts = sig.toString().split("\\.");
             String left = parts[0];
 
             // Get the call count
-            int outGoing = cg.getCallGraph().getSuccessors(sig).size();
+            int incoming = cg.getCallGraph().getSuccessors(sig).size();
 
             // Store className and callCount into a Hashmap
-            if (myDict.containsKey(left)){
-                Integer origin = myDict.get(left);
-                myDict.put(left,(origin+outGoing));
+            if (mfo.containsKey(left)){
+                Integer origin = mfo.get(left);
+                mfo.put(left,(origin+incoming));
             }else {
-                myDict.put(left,outGoing);
+                mfo.put(left,incoming);
             }
         }
-
-        // Iterator hash map to out put the data
-        for (String key : myDict.keySet()) {
-            int value = myDict.get(key);
-            toReturn += key + ", " + value + "\n";
-        }
-
-        sorter(toReturn);
-
+        return mfo;
     }
 
-    private static void sorter(String toReturn) throws IOException {
-        // Convert hashmap to a List
-        List<String[]> lines = new ArrayList<>();
+    private static Map<String, Integer> classFanOut(ClassCallGraph ccg) throws IOException {
+        Map<String, Integer> cfo = new HashMap<String, Integer>();
 
-        for (String line : toReturn.split("\n")) {
+        for(String node : ccg.getClassCG().getNodes()) {
+            // Get the class count
+            int incoming = ccg.getClassCG().getSuccessors(node).size();
 
-            lines.add(line.split(","));
+            // Store className and callCount into a Hashmap
+            cfo.put(node,incoming);
         }
-        // Sort by callCount
-        Collections.sort(lines, new Comparator<String[]>() {
-            @Override
-            public int compare(String[] o1, String[] o2) {
-                int num1 = Integer.parseInt(o1[1].trim());
-                int num2 = Integer.parseInt(o2[1].trim());
-                return Integer.compare(num2, num1);
-            }
-        });
-
-        // Write data to csv file
-        BufferedWriter bw = new BufferedWriter(new FileWriter("call_fan_out_class_sorted.csv"));
-        bw.write("Class, Fan Out\n");
-        for (String[] fields : lines) {
-            bw.write(String.join(",", fields));
-            bw.newLine();
-        }
-        bw.flush();
-        bw.close();
+        return cfo;
     }
-
 
 }

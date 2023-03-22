@@ -3,7 +3,7 @@
 handlers = java.util.logging.FileHandler
 
 # File Logging
-java.util.logging.FileHandler.pattern = logged.log
+java.util.logging.FileHandler.pattern = trace.log
 java.util.logging.FileHandler.formatter = java.util.logging.SimpleFormatter
 java.util.logging.FileHandler.level = ALL
 

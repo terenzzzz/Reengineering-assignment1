@@ -1,8 +1,8 @@
 From, To, Jaccard
-src\main\java\app\CallFanInClassGenerator.java, src\main\java\app\CallFanInGenerator.java, 0.5
-src\main\java\app\CallFanInClassGenerator.java, src\main\java\app\CallFanOutClassGenerator.java, 0.7894736842105263
-src\main\java\app\CallFanInClassGenerator.java, src\main\java\app\CallFanOutGenerator.java, 0.4411764705882353
-src\main\java\app\CallFanInClassGenerator.java, src\main\java\app\CallGraphGenerator.java, 0.22535211267605634
+src\main\java\app\CallFanInClassGenerator.java, src\main\java\app\CallFanInGenerator.java, 0.44285714285714284
+src\main\java\app\CallFanInClassGenerator.java, src\main\java\app\CallFanOutClassGenerator.java, 0.7049180327868853
+src\main\java\app\CallFanInClassGenerator.java, src\main\java\app\CallFanOutGenerator.java, 0.42857142857142855
+src\main\java\app\CallFanInClassGenerator.java, src\main\java\app\CallGraphGenerator.java, 0.2191780821917808
 src\main\java\app\CallFanInGenerator.java, src\main\java\app\CallFanOutClassGenerator.java, 0.47761194029850745
 src\main\java\app\CallFanInGenerator.java, src\main\java\app\CallFanOutGenerator.java, 0.7272727272727273
 src\main\java\app\CallFanInGenerator.java, src\main\java\app\CallGraphGenerator.java, 0.2537313432835821
@@ -29,11 +29,11 @@ src\main\java\dynamicAnalysis\agent\LogMain.java, src\main\java\structuralAnalys
 src\main\java\dynamicAnalysis\agent\LogMain.java, src\main\java\structuralAnalysis\metrics\method\MethodMetric.java, 0.15384615384615385
 src\main\java\fileComparison\visualise\BitmapVisualiser.java, src\main\java\fileComparison\visualise\SimilarityVisualiser.java, 0.1590909090909091
 src\main\java\structuralAnalysis\ClassCallDiagram.java, src\main\java\structuralAnalysis\ClassDiagram.java, 0.2336448598130841
-src\main\java\structuralAnalysis\ClassCallDiagram.java, src\main\java\structuralAnalysis\EnhancedClassDiagram.java, 0.3484848484848485
+src\main\java\structuralAnalysis\ClassCallDiagram.java, src\main\java\structuralAnalysis\EnhancedClassDiagram.java, 0.23711340206185566
 src\main\java\structuralAnalysis\ClassCallDiagram.java, src\main\java\structuralAnalysis\MetricsClassDiagram.java, 0.390625
-src\main\java\structuralAnalysis\ClassDiagram.java, src\main\java\structuralAnalysis\EnhancedClassDiagram.java, 0.23529411764705882
+src\main\java\structuralAnalysis\ClassDiagram.java, src\main\java\structuralAnalysis\EnhancedClassDiagram.java, 0.19463087248322147
 src\main\java\structuralAnalysis\ClassDiagram.java, src\main\java\structuralAnalysis\MetricsClassDiagram.java, 0.2564102564102564
-src\main\java\structuralAnalysis\EnhancedClassDiagram.java, src\main\java\structuralAnalysis\MetricsClassDiagram.java, 0.8245614035087719
+src\main\java\structuralAnalysis\EnhancedClassDiagram.java, src\main\java\structuralAnalysis\MetricsClassDiagram.java, 0.5168539325842697
 src\main\java\structuralAnalysis\metrics\ClassMetricAggregator.java, src\main\java\versionRepositoryAnalysis\Pairs.java, 0.16216216216216217
 src\main\java\structuralAnalysis\metrics\clazz\ClassMetric.java, src\main\java\structuralAnalysis\metrics\clazz\CouplingBetweenObjects.java, 0.23809523809523808
 src\main\java\structuralAnalysis\metrics\clazz\ClassMetric.java, src\main\java\structuralAnalysis\metrics\clazz\DepthOfInheritanceTree.java, 0.19230769230769232
