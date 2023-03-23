@@ -49,7 +49,7 @@ public class Transformer implements ClassFileTransformer{
         if (!Modifier.isNative(method.getModifiers()) && !Modifier.isAbstract(method.getModifiers())) {
             String insertString = "java.util.logging.Logger.getLogger(\""+className+"\")" +
                     ".info(Thread.currentThread().getStackTrace()[1].getClassName() + " +
-                    "\".\" + Thread.currentThread().getStackTrace()[1].getMethodName());";
+                    "\":\" + Thread.currentThread().getStackTrace()[1].getMethodName());";
             method.insertBefore(insertString);
         }
     }
