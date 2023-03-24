@@ -10,6 +10,14 @@ import dependenceAnalysis.interprocedural.ClassCallGraph;
 import dependenceAnalysis.interprocedural.RestrictedCallGraph;
 import dependenceAnalysis.util.Signature;
 
+
+// class path:
+// -cp
+// $Classpath$;"C:\Users\zhang\OneDrive\Desktop\jfreechart\target\jfreechart-2.0.0-SNAPSHOT.jar"
+
+// arg:
+// "C:\Users\zhang\OneDrive\Desktop\jfreechart\target\classes"
+
 public class CallFanInClassGenerator {
 
     public static void main(String[] args) throws IOException{

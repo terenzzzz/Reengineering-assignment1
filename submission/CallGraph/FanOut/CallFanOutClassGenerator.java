@@ -10,6 +10,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
+// class path:
+// -cp
+// $Classpath$;"C:\Users\zhang\OneDrive\Desktop\jfreechart\target\jfreechart-2.0.0-SNAPSHOT.jar"
+
+// arg:
+// "C:\Users\zhang\OneDrive\Desktop\jfreechart\target\classes"
 public class CallFanOutClassGenerator {
 
     public static void main(String[] args) throws IOException{
