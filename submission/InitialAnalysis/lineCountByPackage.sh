@@ -1,3 +1,7 @@
+# Count every class's line of code with sorted by package
+# Running Command:  ./lineCountByPackage.sh ~/OneDrive/Desktop/jfreechart/src/main/java *.java > lineCountWithSort.csv
+# Notice: It may take some time to process
+
 while IFS= read -r file; do
   package=$(dirname "$file")
   fileName=$(basename "$file")
