@@ -33,13 +33,22 @@ public class SoftwareReconnaissance {
 
         // TODO: Subtract all of the elements in N from P.
         HashMap<String, String> relevant = subtractFeature(subtractFeature(subtractFeature(firstTrace,secondTrace),thirdTrace),fourthTrace);
+        List<String> sortedKeys = new ArrayList<>(relevant.keySet());
+        Collections.sort(sortedKeys);
+
         BufferedWriter cm = new BufferedWriter(new FileWriter("relevant_class_method.csv"));
-        cm.write("RelevantClass,Method \n");
+        cm.write("Package,Class,Method \n");
 
         // Write sorted data to .csv file
-        for(String key: relevant.keySet()) {
-            cm.write(key + "," + relevant.get(key) + "\n");
-
+        for(String key: sortedKeys) {
+            String packageName = key;
+            String className = key;
+            int lastDotIndex = key.lastIndexOf(".");
+            if (lastDotIndex != -1) {
+                packageName = key.substring(0, lastDotIndex);
+                className = key.substring(lastDotIndex+1, key.length());
+            }
+            cm.write(packageName + "," + className + "," + relevant.get(key) + "\n");
         }
         cm.flush();
         cm.close();
@@ -48,12 +57,21 @@ public class SoftwareReconnaissance {
 
         // TODO: get package call Count
         HashMap<String, Integer> packageCount = packageCount(relevant);
+        List<Map.Entry<String, Integer>> sortedData = new ArrayList<>(packageCount.entrySet());
+        Collections.sort(sortedData, new Comparator<Map.Entry<String, Integer>>() {
+            @Override
+            public int compare(Map.Entry<String, Integer> entry1, Map.Entry<String, Integer> entry2) {
+                // 根据第二列的数值从大到小排列
+                return entry2.getValue().compareTo(entry1.getValue());
+            }
+        });
+
         BufferedWriter pc = new BufferedWriter(new FileWriter("relevant_package_count.csv"));
-        pc.write("Package,Count \n");
+        pc.write("Package,MethodCount \n");
 
         // Write sorted data to .csv file
-        for(String key: packageCount.keySet()) {
-            pc.write(key + "," + packageCount.get(key) + "\n");
+        for(Map.Entry<String, Integer> entry: sortedData) {
+            pc.write(entry.getKey() + "," + entry.getValue() + "\n");
         }
         pc.flush();
         pc.close();
