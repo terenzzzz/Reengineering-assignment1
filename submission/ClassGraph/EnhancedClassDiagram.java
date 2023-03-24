@@ -58,14 +58,10 @@ public class EnhancedClassDiagram extends ClassDiagram {
         dotGraph.append("digraph classDiagram{\n" +
                 "graph [splines=ortho, rankdir=BT]\n\n");
 
-        // 计算出所有类中拥有最多成员变量的类的成员变量数量
         int maxMembers = Collections.max(numMembers.values());
-        // 对于每个在 includedClasses 中的类
         for(String className : includedClasses){
             int members = numMembers.get(className);
-            // 节点的宽度由该类的成员变量数量决定
             double width = 1 + (members*.65) ;
-            // 节点的高度由该类的方法数量决定
             double height = 1 + (numMethods.get(className)*.15) ;
 
             /*
@@ -73,18 +69,15 @@ public class EnhancedClassDiagram extends ClassDiagram {
             The below code will calculate an RGB colour as a colour on a spectrum from green to red,
             where the top of the scale is determined by the largest class in terms of number of methods.
              */
-            // 将红色的分量设为 255 乘以该类的成员变量数量再除以 maxMembers。
             String r = String.format("%02X", (255 * members) / maxMembers);
-            //然后，将绿色的分量设为 255 减去红色分量。
             String  g = String.format("%02X", (255 * (maxMembers - members)) / maxMembers);
-            //最后，将蓝色的分量设为 0。
             String b = String.format("%02X", 0);
 
             /*
             set width and height, fill colour to RGB computed above. The parameter fixedsize has to be true, otherwise the
             size of a node will automatically expand to fit the label (which would skew our visualisation).
              */
-            // 将该代码添加到 dotGraph 中
+
             // Interface: diamond , Abstract: circle , Class: box, Enum: oval
             String type = classType.get(className);
             String shape = "";
@@ -101,7 +94,7 @@ public class EnhancedClassDiagram extends ClassDiagram {
             dotGraph.append("\""+className + "\"[shape = "+ shape+", width="+width+", height="+height+", style=filled, fillcolor=\"#"+r+g+b+"\",fixedsize=true];\n");
         }
 
-        //Add inheritance relations 继承
+        //Add inheritance relations
         for(String childClass : inheritance.keySet()){
             if(includedClasses.contains(childClass) && includedClasses.contains(inheritance.get(childClass))) {
                 String from = "\"" + childClass + "\"";
@@ -112,7 +105,7 @@ public class EnhancedClassDiagram extends ClassDiagram {
             }
         }
 
-        //Add associations 关联
+        //Add associations 
         System.out.println(associations);
         for(String cls : associations.keySet()){
             if(!includedClasses.contains(cls))
